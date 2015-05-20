@@ -24,4 +24,5 @@ public class Asiakas {
 	public void setOsoite(String osoite) {
 		this.osoite = osoite;
 	}
+	
 }

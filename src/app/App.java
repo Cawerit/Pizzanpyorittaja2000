@@ -8,7 +8,7 @@ public class App {
     	
     	try{
     		Class.forName("org.postgresql.Driver");
-    		System.out.println("Toimii");
+    		System.out.println("Toimiii");
     	} catch(Exception e){
     		System.out.println("Luokkaa ei löydy");
     	}

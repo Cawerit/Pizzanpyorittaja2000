@@ -1,6 +1,7 @@
 package app;
 import java.util.ArrayList;
-import java.sql.*;
+import java.sql.ResultSet;
+
 
 public class Asiakas {
 	
@@ -22,21 +23,13 @@ public class Asiakas {
 	public void setOsoite(String osoite) {
 		this.osoite = osoite;
 	}
+	
 	private int id;
 	private String nimi;
 	private String osoite;
 	
 	
 	public static ArrayList<Asiakas> hae(){
-		
-		Connection yhteys = null;
-		Statement haku = null;
-		ResultSet tulokset = null;
-		
-		
-		
+		ResultSet tulokset = Yhteys.hae("SELECT * FROM asiakas");
 	}
-	
-	
-	
 }

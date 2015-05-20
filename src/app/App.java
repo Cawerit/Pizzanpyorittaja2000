@@ -3,12 +3,16 @@ package app;
 import java.sql.*;
 
 public class App {
+	
+	public static final String SQL_URL = "jdbc:mysql://localhost:3306/pp2000";
+	public static final String SQL_USER = "root";
+	public static final String SQL_PWD = "tietue";
+	
 
     public static void main(String[] args) {
     	
-    	//final String userName = "root";
-    	//final String password = "tietue";
-    	
+    	final String userName = "root";
+    	final String password = "tietue";
     	
     	
     	try{

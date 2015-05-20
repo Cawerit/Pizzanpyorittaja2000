@@ -40,4 +40,18 @@ public class Yhteys {
 		}
 		return null;
 	}
+	
+	public boolean päivitä(String kasky){
+		
+		try {
+			Connection conn = this.conn;
+			Statement st = conn.createStatement();
+			st.executeUpdate(kasky);
+			return true;
+	  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

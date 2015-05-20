@@ -28,8 +28,34 @@ public class Asiakas {
 	private String nimi;
 	private String osoite;
 	
+	@Override
+	public String toString(){
+		return "< #" + id + " nimi: " + nimi + ", osoite: " + osoite + " >";
+	}
+	
+	public Asiakas(int id, String nimi, String osoite){
+		setId(id);
+		setNimi(nimi);
+		setOsoite(osoite);
+	}
+	
 	
 	public static ArrayList<Asiakas> hae(){
-		ResultSet tulokset = Yhteys.hae("SELECT * FROM asiakas");
+		ResultSet tulokset = App.yhteys.hae("SELECT * FROM asiakas");
+		ArrayList<Asiakas> kaikki = new ArrayList<>();
+		try{
+			while(tulokset.next()){
+				kaikki.add(
+						new Asiakas(
+							tulokset.getInt("id"),
+							tulokset.getString("nimi"),
+							tulokset.getString("osoite")
+						)
+				);
+			}
+		} catch(Exception e){
+			System.out.println(e);
+		}
+		return kaikki;
 	}
 }

@@ -2,12 +2,19 @@ package app;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Asiakas {
-
+	
 	private int id;
 	private String nimi;
 	private String osoite;
+	
+	public Asiakas(int id, String nimi, String osoite){
+		setId(id);
+		setNimi(nimi);
+		setOsoite(osoite);
+	}
 	
 	public int getId() {
 		return id;
@@ -33,23 +40,27 @@ public class Asiakas {
 		yhteys.päivitä(kasky);
 	}
 	
-	
-	public void haeTiedot(Yhteys yhteys){
-  	  	ResultSet res = yhteys.hae("Select * from asiakas");
-  	  	try {
-			while(res.next()){
-				int id = res.getInt("id");
-				String nimi = res.getString("nimi");
-				System.out.println(id + "\t" + nimi);
-
-				
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-
+	@Override
+	public String toString(){
+		return "< #" + id + " nimi: " + nimi + ", osoite: " + osoite + " >";
 	}
 	
-
+	public static ArrayList<Asiakas> hae(){
+		ResultSet tulokset = App.yhteys.hae("SELECT * FROM asiakas");
+		ArrayList<Asiakas> kaikki = new ArrayList<>();
+		try{
+			while(tulokset.next()){
+				kaikki.add(
+						new Asiakas(
+							tulokset.getInt("id"),
+							tulokset.getString("nimi"),
+							tulokset.getString("osoite")
+						)
+				);
+			}
+		} catch(Exception e){
+			System.out.println(e);
+		}
+		return kaikki;
+	}
+}

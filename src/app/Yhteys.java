@@ -42,7 +42,6 @@ public class Yhteys {
 	}
 	
 	public boolean päivitä(String kasky){
-		
 		try {
 			Connection conn = this.conn;
 			Statement st = conn.createStatement();

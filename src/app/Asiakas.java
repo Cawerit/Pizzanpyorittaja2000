@@ -10,8 +10,7 @@ public class Asiakas {
 	private String nimi;
 	private String osoite;
 	
-	public Asiakas(int id, String nimi, String osoite){
-		setId(id);
+	public Asiakas(String nimi, String osoite){
 		setNimi(nimi);
 		setOsoite(osoite);
 	}
@@ -35,9 +34,8 @@ public class Asiakas {
 		this.osoite = osoite;
 	}
 	
-	public void lisaaAsiakas(String kasky, Yhteys yhteys){
-		
-		yhteys.päivitä(kasky);
+	public boolean tallenna(){
+		return App.yhteys.lisaa("ASIAKAS (nimi, osoite)", ("\"" + nimi + "\"," + osoite + "\""));
 	}
 	
 	@Override
@@ -50,13 +48,12 @@ public class Asiakas {
 		ArrayList<Asiakas> kaikki = new ArrayList<>();
 		try{
 			while(tulokset.next()){
-				kaikki.add(
-						new Asiakas(
-							tulokset.getInt("id"),
-							tulokset.getString("nimi"),
-							tulokset.getString("osoite")
-						)
-				);
+				Asiakas uusi = new Asiakas(
+						tulokset.getString("nimi"),
+						tulokset.getString("osoite")
+					);
+				uusi.setId(tulokset.getInt("id"));
+				kaikki.add(uusi);
 			}
 		} catch(Exception e){
 			System.out.println(e);

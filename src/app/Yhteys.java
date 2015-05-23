@@ -41,11 +41,11 @@ public class Yhteys {
 		return null;
 	}
 	
-	public boolean päivitä(String kasky){
+	public boolean lisaa(String minne, String mita){
 		try {
 			Connection conn = this.conn;
 			Statement st = conn.createStatement();
-			st.executeUpdate(kasky);
+			st.executeUpdate("INSERT INTO " + minne + " VALUES (" + mita + ");");
 			return true;
 	  
 		} catch (Exception e) {

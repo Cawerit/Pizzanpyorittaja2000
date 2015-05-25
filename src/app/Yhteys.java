@@ -2,55 +2,63 @@ package app;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
 
 
 public class Yhteys {
 
-	private static final String url = "jdbc:mysql://localhost:3306/";
-	private static final String dbName = "pp2000";
-	private static final String driver = "com.mysql.jdbc.Driver";
-	private static final String userName = "root"; 
-	private static final String password = "tietue";
-	private Connection conn;
+	private static final String URL = "jdbc:mysql://localhost:3306/";
+	private static final String KANTA = "pp2000";
+	private static final String AJURI = "com.mysql.jdbc.Driver";
+	private static final String KAYTTAJA = "root"; 
+	private static final String SALASANA = "tietue";
+	private Connection yhteys;
 	
 	public Yhteys(){
 		try{
-			Class.forName(driver).newInstance();
-			this.conn = DriverManager.getConnection(url+dbName,userName,password);
+			Class.forName(AJURI).newInstance();
+			this.yhteys = DriverManager.getConnection(URL+KANTA, KAYTTAJA, SALASANA);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public ResultSet hae(String kysely){
-	
-		try {
-			Connection conn = this.conn;
-			Statement st = conn.createStatement();
-			ResultSet res = st.executeQuery(kysely);
-			System.out.println("yolo");
-			return res;
-	  
-		} catch (Exception e) {
-			e.printStackTrace();
+	/**
+	 * Suorittaa annetun PreparedStetementin mukaisen haun palvelimelle.
+	 * @param statement PreparedStatement-objekti joka voidaan suorittaa.
+	 * @return Haun tulokset sisältävä ResultSet-objekti.
+	 */
+	public ResultSet hae(PreparedStatement statement){
+		try{
+			return statement.executeQuery();
+		} catch(SQLException e){
+			System.out.println("Virhe suoritettaessa hakua palvelimelle. \n" + e.toString());
+			return null;
 		}
-		return null;
+	}
+	public <T extends Kantaolio> ArrayList<T> haeTaulu(String taulu, Class<T> luokka){
+		try{
+			return Kantaolio.mapData( hae(getStatement("SELECT * FROM " + taulu)), luokka);
+		} catch (SQLException e){
+			System.out.println("Virhe muodostaessa lauseketta.\n" + e.toString());
+			return null;
+		}
 	}
 	
-	public boolean lisaa(String minne, String mita){
-		try {
-			Connection conn = this.conn;
-			Statement st = conn.createStatement();
-			st.executeUpdate("INSERT INTO " + minne + " VALUES (" + mita + ");");
-			return true;
-	  
-		} catch (Exception e) {
-			e.printStackTrace();
+	public int tallenna(PreparedStatement statement){
+		try{
+			return statement.executeUpdate();
+		} catch(SQLException e){
+			System.out.println("Virhe suoritettaessa hakua palvelimelle. \n" + e.toString());
+			return 0;
 		}
-		return false;
 	}
+	
+	public PreparedStatement getStatement(String sql) throws SQLException{
+		return this.yhteys.prepareStatement(sql);
+	}
+	
 }

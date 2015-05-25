@@ -45,5 +45,4 @@ Temporary Items
 
 # Javatiedostot
 *.classpath
-*.java
-*.java
+*.class

@@ -1,10 +1,25 @@
 package app;
 
-public class RaakaAine {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+
+public class RaakaAine implements Kantaolio{
+	
+	public static final String TAULU = "raaka_aine";
+	public static final String UPDATE_SQL =
+			"UPDATE " + TAULU + " SET hinta = ? , varastosaldo = ? WHERE nimi = ?";
+	public static final String INSERT_SQL =
+			"INSERT INTO " + TAULU + "(nimi, hinta, varastosaldo) VALUES (? , ? , ?)";
 
 	private String nimi;
 	private double hinta;
 	private int varastosaldo;
+	
+	public RaakaAine(){
+		
+	}
 	
 	public RaakaAine(String nimi, double hinta, int varastosaldo){
 		setNimi(nimi);
@@ -30,7 +45,52 @@ public class RaakaAine {
 	public void setVarastosaldo(int varastosaldo) {
 		this.varastosaldo = varastosaldo;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o == null || !(o instanceof RaakaAine)) return false;
+		RaakaAine a = (RaakaAine) o;
+		return a.getNimi().equals(getNimi()) && a.getHinta() == getHinta() && a.getVarastosaldo() == getVarastosaldo();
+	}
+		
+	@Override
+	public String toString(){
+		return "< nimi: " + nimi + ", hinta: " + hinta + ", varastosaldo: " + varastosaldo + " >";
+	}
 
-	
-	
+	@Override
+	public boolean pullData(ResultSet resource){
+		try{
+			setNimi( resource.getString("nimi") );
+			setHinta( resource.getDouble("hinta") );
+			setVarastosaldo( resource.getInt("varastosaldo") );
+			return true;
+		} catch( SQLException e ){
+			System.out.println("Virhe raaka-aineen päivittämisessä \n"+ e.toString());
+			return false;
+		}
+	}	
+	@Override
+	public boolean pushData(Yhteys yhteys){
+		PreparedStatement lauseke;
+    	ArrayList<RaakaAine> lista = yhteys.haeTaulu(RaakaAine.TAULU, RaakaAine.class);
+		try{
+			lauseke = yhteys.getStatement(INSERT_SQL);
+			//Jos raaka-aine löytyy tietokannasta, tehdään päivitysoperaatio :
+			for(RaakaAine aine : lista){
+				if(this.nimi.equals(aine.getNimi())){
+					lauseke = yhteys.getStatement(UPDATE_SQL);
+				}
+			}
+			lauseke.setString(1, this.nimi);
+			lauseke.setDouble(2, this.hinta);
+			lauseke.setInt(3, this.varastosaldo);
+			
+			return yhteys.tallenna(lauseke) > 0;
+			} catch (SQLException e){
+				System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());
+				return false;
+			}
+	}
 }
+			

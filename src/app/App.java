@@ -35,5 +35,18 @@ public class App {
     	
     	System.out.println(lista.toString().replaceAll(">,", ">,\n"));
 
+    	//Raaka-ainetestit
+    	RaakaAine r1 = new RaakaAine("Tomaatti", 0.59, 50);
+    	RaakaAine r2 = new RaakaAine("Juusto", 0.89, 100);
+    	
+    	boolean onnistui = r1.pushData(y);
+		System.out.println("\n" + "Raaka-aineen " + r1.getNimi() + " päivitys " + (onnistui ? "onnistui." : "epäonnistui."));
+    	
+		onnistui = r2.pushData(y);
+		System.out.println("Raaka-aineen " + r2.getNimi() + " päivitys " + (onnistui ? "onnistui." : "epäonnistui."));
+		
+		System.out.println(y.haeTaulu(RaakaAine.TAULU, RaakaAine.class).toString().replaceAll(">,", ">,\n"));
+    	
+    	
     }
 }

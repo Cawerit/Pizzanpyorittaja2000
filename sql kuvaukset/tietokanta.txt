@@ -1,0 +1,2 @@
+#Tietokannan luonti
+CREATE DATABASE pp2000;

@@ -1,0 +1,9 @@
+# Asiakastaulun luonti
+USE pp2000; #Valitaan kanta
+
+CREATE TABLE asiakas(
+	id INT UNSIGNED AUTO_INCREMENT,
+	nimi VARCHAR(40) NOT NULL,
+	osoite VARCHAR(60) NOT NULL,
+	primary key(id)
+);

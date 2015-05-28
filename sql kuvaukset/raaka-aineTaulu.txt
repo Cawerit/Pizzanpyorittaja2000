@@ -1,0 +1,6 @@
+# raaka-aine taulun luonti:
+CREATE TABLE raaka_aine(
+nimi VARCHAR(40) NOT NULL,
+hinta DOUBLE(4,2) NOT NULL,
+varastosaldo INT NOT NULL,
+primary key(nimi));

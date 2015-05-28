@@ -1,0 +1,11 @@
+# tilaustaulun luonti:
+USE pp2000;
+CREATE TABLE tilaus(
+tilausnumero INT UNSIGNED AUTO_INCREMENT,
+kuljettajanNimi VARCHAR(40),
+hinta DOUBLE(4,2),
+asiakkaanId INT NOT NULL,
+PRIMARY KEY (tilausnumero),
+CONSTRAINT Tilno
+	FOREIGN KEY (tilausnumero) 
+	REFERENCES asiakas(id));

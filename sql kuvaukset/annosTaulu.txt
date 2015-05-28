@@ -1,0 +1,5 @@
+# annostaulun luonti:
+USE pp2000;
+CREATE TABLE annos (nimi VARCHAR(20) NOT NULL,
+valmistuskustannukset DOUBLE(4,2),
+primary key (nimi));

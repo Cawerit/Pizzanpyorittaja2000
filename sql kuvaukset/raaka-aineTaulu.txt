@@ -1,4 +1,5 @@
-# raaka-aine taulun luonti:
+# raaka-ainetaulun luonti:
+USE pp2000;
 CREATE TABLE raaka_aine(
 nimi VARCHAR(40) NOT NULL,
 hinta DOUBLE(4,2) NOT NULL,

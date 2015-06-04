@@ -39,14 +39,6 @@ public class Yhteys {
 			return null;
 		}
 	}
-	public <T extends Kantaolio> ArrayList<T> haeTaulu(String taulu, Class<T> luokka){
-		try{
-			return Kantaolio.mapData( hae(getStatement("SELECT * FROM " + taulu)), luokka);
-		} catch (SQLException e){
-			System.out.println("Virhe muodostaessa lauseketta.\n" + e.toString());
-			return null;
-		}
-	}
 	
 	public int tallenna(PreparedStatement statement){
 		try{
@@ -57,8 +49,15 @@ public class Yhteys {
 		}
 	}
 	
-	public PreparedStatement getStatement(String sql) throws SQLException{
-		return this.yhteys.prepareStatement(sql);
+	public PreparedStatement getStatement(String sql){
+		try{
+			return this.yhteys.prepareStatement(sql);
+		}catch (SQLException e){
+			System.out.println("Virhe muodostaessa lauseketta.\n" + e.toString());
+			return null;
+		}
 	}
+	
+	
 	
 }

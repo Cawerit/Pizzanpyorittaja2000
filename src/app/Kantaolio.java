@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  */
 public interface Kantaolio {
-	
+
 	/**
 	 * Muodostaa annetusta ResultSet-objektista Kantaolioita sisältävän ArrayList-objektin.
 	 * 

@@ -1,6 +1,6 @@
 package app;
 
-public class Tilaus {
+public class Tilaus{
 
 	private int tilausnumero;
 	private String kuljettajanNimi;

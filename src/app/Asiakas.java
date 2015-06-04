@@ -12,7 +12,7 @@ public class Asiakas implements Kantaolio {
 			"UPDATE " + TAULU + " SET nimi = ? , osoite = ? WHERE id = ?";
 	public static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(nimi, osoite) VALUES (? , ?)";
-	
+		
 	private int id;
 	private String nimi;
 	private String osoite;
@@ -88,6 +88,18 @@ public class Asiakas implements Kantaolio {
 			System.out.println("Virhe tallenteen p‰ivitt‰misess‰. \n"+e.toString());
 			return false;
 		}
+	}
+	/**
+	 * 	Hakee kaikki annetun asiakastaulun tallenteet.
+	 * 
+	 * 	@return Lista, joka sis‰lt‰‰ koko asiakastaulun datan Asiakas-objekteina.
+	 */
+	public static ArrayList<Asiakas> haeKaikki(){
+		Yhteys y = App.getYhteys();
+		return Kantaolio.mapData(
+				y.hae(
+				y.getStatement("SELECT * FROM " + TAULU)),
+				Asiakas.class);
 	}
 }
 

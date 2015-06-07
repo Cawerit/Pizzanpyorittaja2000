@@ -73,24 +73,34 @@ public class RaakaAine implements Kantaolio{
 	@Override
 	public boolean pushData(Yhteys yhteys){
 		PreparedStatement lauseke;
-    	ArrayList<RaakaAine> lista = yhteys.haeTaulu(RaakaAine.TAULU, RaakaAine.class);
+    	ArrayList<RaakaAine> lista = haeKaikki();
 		try{
 			lauseke = yhteys.getStatement(INSERT_SQL);
+			lauseke.setString(1, this.nimi);
+			lauseke.setDouble(2, this.hinta);
+			lauseke.setInt(3, this.varastosaldo);
 			//Jos raaka-aine löytyy tietokannasta, tehdään päivitysoperaatio :
 			for(RaakaAine aine : lista){
 				if(this.nimi.equals(aine.getNimi())){
 					lauseke = yhteys.getStatement(UPDATE_SQL);
+					lauseke.setDouble(1, this.hinta);
+					lauseke.setInt(2, this.varastosaldo);
+					lauseke.setString(3, this.nimi);
 				}
 			}
-			lauseke.setString(1, this.nimi);
-			lauseke.setDouble(2, this.hinta);
-			lauseke.setInt(3, this.varastosaldo);
-			
 			return yhteys.tallenna(lauseke) > 0;
 			} catch (SQLException e){
 				System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());
 				return false;
 			}
+	}
+	
+	public static ArrayList<RaakaAine> haeKaikki(){
+		Yhteys y = App.getYhteys();
+		return Kantaolio.mapData(
+				y.hae(
+				y.getStatement("SELECT * FROM " + TAULU)),
+				RaakaAine.class);
 	}
 }
 			

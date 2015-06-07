@@ -1,11 +1,11 @@
 package app;
 
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class Kayttoliittyma {
 
+	private Yhteys yhteys = App.getYhteys();
 	private Scanner sc;
 	public static String HAE_KAIKKI = "SELECT * FROM ?";
 	
@@ -27,6 +27,9 @@ public class Kayttoliittyma {
 				case 1:
 					asiakasCtrl();
 					break;
+				case 2:
+					varastoCtrl();
+					break;
 				case 4:
 					return;
 				default:
@@ -39,14 +42,22 @@ public class Kayttoliittyma {
 	private void asiakasCtrl(){
 		while(true){
 			sano("", "");
-			int osio = kysyInt("\t\t", "1: Lue kaikki asiakkaat", "4: Palaa takaisin");
+			int osio = kysyInt("\t\t", "1: Lue kaikki asiakkaat", "2: Lisää uusi asiakas", "4: Palaa takaisin");
 			
 			switch(osio){
 			
 				case 1:
 					sano(Asiakas.haeKaikki().toArray());
 					break;
-			
+				case 2:
+					Asiakas uusi = new Asiakas();
+					uusi.setNimi(kysyStr("\t\t", "Anna asiakkaan nimi"));
+					uusi.setOsoite(kysyStr("\t\t", "Anna asiakkaan osoite"));
+					uusi.pushData(yhteys);
+					//Poistetaan asiakas-olio, jotta voidaan luoda uusia asiakkaita
+					uusi = null;
+					System.out.println("\t\tAsiakas tallennettu tietokantaan");
+					break;
 				case 4:
 					return;
 					
@@ -59,6 +70,38 @@ public class Kayttoliittyma {
 		}
 	}
 	
+	
+	private void varastoCtrl(){
+		while(true){
+			sano("", "");
+			int osio = kysyInt("\t\t", "1: Lue varaston sisältö", "2: Lisää tuote varastoon", "4: Palaa takaisin");
+			
+			switch(osio){
+			
+				case 1:
+					sano(RaakaAine.haeKaikki().toArray());
+					break;
+				case 2: 
+					RaakaAine uusi = new RaakaAine();
+					uusi.setNimi(kysyStr("\t\t", "Anna tuotteen nimi"));
+					uusi.setHinta(kysyDouble("\t\t", "Anna tuotteen hinta"));
+					uusi.setVarastosaldo(kysyInt("\t\t", "Anna tuotteen varastosaldo"));
+					uusi.pushData(yhteys);
+					//Poistetaan olio, jotta voidaan luoda uusia raaka-aineita
+					uusi = null;
+					System.out.println("\t\tTuote lisätty varastoon");
+					break;
+				case 4:
+					return;
+					
+				default:
+					sano("Toimintoa ei tunneta");
+					break;
+			
+			}
+			
+		}
+	}
     /*
      * 	Tulostaa näytölle annetut lauseet
      * 
@@ -81,6 +124,9 @@ public class Kayttoliittyma {
     
     private int kysyInt(String... txt){
     	return Integer.parseInt(kysyStr(txt));
+    }
+    private double kysyDouble(String... txt){
+    	return Double.parseDouble(kysyStr(txt));
     }
     private String kysyStr(String... txt){
     	sano(txt);

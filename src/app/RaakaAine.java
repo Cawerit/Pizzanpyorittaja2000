@@ -102,5 +102,9 @@ public class RaakaAine implements Kantaolio{
 				y.getStatement("SELECT * FROM " + TAULU)),
 				RaakaAine.class);
 	}
+	
+	public void vahennaSaldoa(){
+		this.varastosaldo--;
+	}
 }
 			

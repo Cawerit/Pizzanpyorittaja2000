@@ -106,5 +106,23 @@ public class RaakaAine implements Kantaolio{
 	public void vahennaSaldoa(){
 		this.varastosaldo--;
 	}
+	
+	/*
+	 * Hakee hinnan tietokannasta raaka-aineen nimen perusteella.
+	 */
+	public static double haeHinta(String nimi){
+		Yhteys yhteys = App.getYhteys();
+		PreparedStatement lauseke = yhteys.getStatement("SELECT hinta FROM raaka_aine WHERE nimi='" + nimi + "';");
+		try {
+			ResultSet rs = yhteys.hae(lauseke);
+			while(rs.next()){
+				double hinta = rs.getDouble(1);
+				return hinta;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0.0;
+	}
 }
 			

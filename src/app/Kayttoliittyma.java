@@ -1,5 +1,6 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -20,8 +21,9 @@ public class Kayttoliittyma {
 			int osio = kysyInt("\t",
 					"1: Asiakkaat",
 					"2: Varasto",
-					"3: Tilaukset",
-					"4: Lopeta ohjelma");
+					"3: Menu",
+					"4: Tilaukset",
+					"5: Lopeta ohjelma");
 			
 			switch(osio){
 				case 1:
@@ -30,7 +32,10 @@ public class Kayttoliittyma {
 				case 2:
 					varastoCtrl();
 					break;
-				case 4:
+				case 3:
+					menuCtrl();
+					break;
+				case 5:
 					return;
 				default:
 					sano("Toimintoa ei tunneta");
@@ -70,7 +75,6 @@ public class Kayttoliittyma {
 		}
 	}
 	
-	
 	private void varastoCtrl(){
 		while(true){
 			sano("", "");
@@ -102,6 +106,49 @@ public class Kayttoliittyma {
 			
 		}
 	}
+	
+	private void menuCtrl(){
+		while(true){
+			sano("", "");
+			int osio = kysyInt("\t\t", "1: Lue kaikki annokset", "2: Luo uusi annos", "4: Palaa takaisin");
+			
+			switch(osio){
+			
+				case 1:
+					sano(Annos.haeKaikki().toArray());
+					break;
+				case 2: 
+					Annos uusi = new Annos();
+					uusi.setNimi(kysyStr("\t\t", "Anna annoksen nimi"));
+					uusi.setValmistuskustannukset(kysyDouble("\t\t", "Anna annoksen valmistuskustannukset"));
+					Boolean jatketaanko = true;
+					ArrayList<String> raakaAineet = new ArrayList<String>();
+					while(jatketaanko){
+						String raakaAine = kysyStr("\t\t", "Lisää raaka-aine tai tallenna annos painamalla 4");
+						if(!raakaAine.equals("4")){
+							raakaAineet.add(raakaAine);
+						} else {
+							jatketaanko = false;
+						}
+					}
+					uusi.pushData(yhteys);
+					uusi.setRaakaAineet(raakaAineet);
+					//Poistetaan olio, jotta voidaan luoda uusia annoksia
+					uusi = null;
+					System.out.println("\t\tAnnos tallennettu");
+					break;
+				case 4:
+					return;
+					
+				default:
+					sano("Toimintoa ei tunneta");
+					break;
+			
+			}
+			
+		}
+	}
+	
     /*
      * 	Tulostaa näytölle annetut lauseet
      * 

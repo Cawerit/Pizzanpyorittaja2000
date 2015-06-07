@@ -1,0 +1,12 @@
+# AnnosKoostuu -taulun luonti:
+USE pp2000;
+CREATE TABLE annosKoostuu(
+annoksenNimi VARCHAR(40),
+raakaAineenNimi VARCHAR(40),
+PRIMARY KEY(annoksenNimi, raakaAineenNimi),
+CONSTRAINT animi
+	FOREIGN KEY (annoksenNimi)
+	REFERENCES annos(nimi),
+CONSTRAINT rnimi
+	FOREIGN KEY (raakaAineenNimi)
+	REFERENCES raaka_aine(nimi));

@@ -136,7 +136,7 @@ public class Annos implements Kantaolio{
 	/*
 	 * Laskee annoksen valmistuskustannukset ja jokaisen siihen kuuluvan raaka-aineen hinnan yhteen.
 	 */
-	public double haeHinta(String annoksenNimi){
+	public static double haeHinta(String annoksenNimi){
 		double hinta = haeValmistuskustannukset(annoksenNimi);
 		ResultSet raakaAineet = haeRaakaAineet(annoksenNimi);
 		try {
@@ -152,7 +152,7 @@ public class Annos implements Kantaolio{
 	/*
 	 * Hakee valmistuskustannukset tietokannasta annoksen nimen perusteella.
 	 */
-	public double haeValmistuskustannukset(String nimi){
+	public static double haeValmistuskustannukset(String nimi){
 		Yhteys yhteys = App.getYhteys();
 		PreparedStatement lauseke = yhteys.getStatement("SELECT valmistuskustannukset FROM annos WHERE nimi='" + nimi + "';");
 		ResultSet rs = yhteys.hae(lauseke);
@@ -171,7 +171,7 @@ public class Annos implements Kantaolio{
 	/*
 	 * Hakee annokseen kuuluvat raaka-aineet tietokannasta.
 	 */
-	public ResultSet haeRaakaAineet(String annoksenNimi){
+	public static ResultSet haeRaakaAineet(String annoksenNimi){
 		Yhteys yhteys = App.getYhteys();
 		PreparedStatement lauseke = yhteys.getStatement("SELECT raakaAineenNimi FROM annosKoostuu WHERE annoksenNimi = '" + annoksenNimi + "';");
 		return yhteys.hae(lauseke);

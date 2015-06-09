@@ -102,9 +102,15 @@ public class RaakaAine implements Kantaolio{
 				y.getStatement("SELECT * FROM " + TAULU)),
 				RaakaAine.class);
 	}
-	
-	public void vahennaSaldoa(){
-		this.varastosaldo--;
+
+	/*
+	 * V‰hent‰‰ raaka-aineen varastosaldoa yhdell‰. Kutsuttava tilauksen luomisen yhteydess‰.
+	 */
+	public void vahennaSaldoa(String raakaAine){
+		Yhteys yhteys = App.getYhteys();
+		PreparedStatement lauseke = yhteys.getStatement("UPDATE varastosaldo FROM raaka_aine WHERE nimi='" + raakaAine + "' " + 
+									"SET((SELECT varastosaldo FROM raaka_aine WHERE nimi = " + "'" + raakaAine + "'" + ")-1);");
+		yhteys.tallenna(lauseke);
 	}
 	
 	/*

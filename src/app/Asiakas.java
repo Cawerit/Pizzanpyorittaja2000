@@ -101,6 +101,40 @@ public class Asiakas implements Kantaolio {
 				y.getStatement("SELECT * FROM " + TAULU)),
 				Asiakas.class);
 	}
+	
+	/**
+	 * Hakee asiakkaan id:tä vastaavan nimen tietokannasta.
+	 * 
+	 * @param id Asiakkaan Id
+	 * @return Asiakkaan nimi
+	 */
+	public static String haeAsiakkaanNimi(int id){
+		Yhteys yhteys = App.getYhteys();
+		ResultSet rs = yhteys.hae(yhteys.getStatement("SELECT nimi FROM asiakas WHERE id= " + id + ";"));
+		try {
+			while (rs.next()) return rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "Asiakkaan nimeä ei löytynyt.";
+	}
+	
+	/**
+	 * Hakee asiakkaan nimeä vastaavan id:n tietokannasta.
+	 * 
+	 * @param nimi Asiakkaan nimi
+	 * @return Asiakkaan id
+	 */
+	public static int haeAsiakkaanId(String nimi){
+		Yhteys yhteys = App.getYhteys();
+		ResultSet rs = yhteys.hae(yhteys.getStatement("SELECT id FROM asiakas WHERE nimi= '" + nimi + "';"));
+		try {
+			while(rs.next()) return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }
 
 

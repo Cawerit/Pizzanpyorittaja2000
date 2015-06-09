@@ -35,6 +35,9 @@ public class Kayttoliittyma {
 				case 3:
 					menuCtrl();
 					break;
+				case 4:
+					tilausCtrl();
+					break;
 				case 5:
 					return;
 				default:
@@ -136,6 +139,48 @@ public class Kayttoliittyma {
 					//Poistetaan olio, jotta voidaan luoda uusia annoksia
 					uusi = null;
 					System.out.println("\t\tAnnos tallennettu");
+					break;
+				case 4:
+					return;
+					
+				default:
+					sano("Toimintoa ei tunneta");
+					break;
+			
+			}
+			
+		}
+	}
+	
+	private void tilausCtrl(){
+		while(true){
+			sano("", "");
+			int osio = kysyInt("\t\t", "1: Lue kaikki tilaukset", "2: Luo uusi tilaus", "4: Palaa takaisin");
+			
+			switch(osio){
+			
+				case 1:
+					sano(Tilaus.haeKaikki().toArray());
+					break;
+				case 2: 
+					Tilaus uusi = new Tilaus();
+					uusi.setAsiakkaanId(Asiakas.haeAsiakkaanId(kysyStr("\t\t", "Anna Asiakkaan nimi")));
+					uusi.setKuljettajanNimi(kysyStr("\t\t", "Anna kuljettajan nimi"));
+					Boolean jatketaanko = true;
+					ArrayList<String> annokset = new ArrayList<String>();
+					while(jatketaanko){
+						String annos = kysyStr("\t\t", "Lis‰‰ annos tai tallenna tilaus painamalla 4");
+						if(!annos.equals("4")){
+							annokset.add(annos);
+						} else {
+							jatketaanko = false;
+						}
+					}
+					uusi.pushData(yhteys);
+					uusi.setAnnokset(annokset);
+					//Poistetaan olio, jotta voidaan luoda uusia tilauksia
+					uusi = null;
+					System.out.println("\t\tTilaus tallennettu");
 					break;
 				case 4:
 					return;

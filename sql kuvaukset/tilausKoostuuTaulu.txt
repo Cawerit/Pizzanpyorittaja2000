@@ -1,0 +1,12 @@
+# TilausKoostuu -taulun luonti:
+USE pp2000;
+CREATE TABLE tilausKoostuu(
+tilausnumero INT UNSIGNED,
+annoksenNimi VARCHAR(40),
+PRIMARY KEY(tilausnumero, annoksenNimi),
+CONSTRAINT tilausno
+	FOREIGN KEY (tilausnumero)
+	REFERENCES tilaus(tilausnumero),
+CONSTRAINT annimi
+	FOREIGN KEY (annoksenNimi)
+	REFERENCES annos(nimi));

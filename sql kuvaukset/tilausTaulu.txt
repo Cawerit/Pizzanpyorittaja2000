@@ -4,8 +4,8 @@ CREATE TABLE tilaus(
 tilausnumero INT UNSIGNED AUTO_INCREMENT,
 kuljettajanNimi VARCHAR(40),
 hinta DOUBLE(4,2),
-asiakkaanId INT NOT NULL,
+asiakkaanId INT UNSIGNED,
 PRIMARY KEY (tilausnumero),
-CONSTRAINT Tilno
-	FOREIGN KEY (tilausnumero) 
+CONSTRAINT asid
+	FOREIGN KEY (asiakkaanId) 
 	REFERENCES asiakas(id));

@@ -140,7 +140,12 @@ public class Tilaus implements Kantaolio{
 	private void tallennaAnnokset(ArrayList<String> annokset){
 		Yhteys yhteys = App.getYhteys();
 		for(String annos : annokset){
+			//varastosaldon vähennys:
 			try{
+				ResultSet raakaAineet = Annos.haeRaakaAineet(annos);
+				while(raakaAineet.next()){
+					RaakaAine.vahennaSaldoa(raakaAineet.getString(1));
+				}
 				PreparedStatement lauseke = yhteys.getStatement("INSERT INTO tilausKoostuu VALUES('" + haeViimeisinTilausnumero() + "', '" + annos + "');");
 				yhteys.tallenna(lauseke);
 			} 

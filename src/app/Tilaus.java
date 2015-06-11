@@ -83,7 +83,7 @@ public class Tilaus implements Kantaolio{
 	@Override
 	public String toString(){
 		return "< #" + tilausnumero + " annokset: " + haeAnnokset(tilausnumero) + ", hinta: " + haeHinta(tilausnumero) + ", asiakkaan nimi: "
-				+ Asiakas.haeAsiakkaanNimi(asiakkaanId) + ", kuljettajan nimi: " + kuljettajanNimi + ">";
+				+ haeAsiakkaanNimi(tilausnumero) + ", kuljettajan nimi: " + kuljettajanNimi + ">";
 	}
 	
 	@Override
@@ -191,5 +191,33 @@ public class Tilaus implements Kantaolio{
 				e.printStackTrace();
 			}
 		return 0;
+	}
+	
+	/*
+	 * Hakee tilausta koskevan asiakkaan nimen
+	 */
+	public static String haeAsiakkaanNimi(int tilausnro){
+		int id = 0;
+		Yhteys yhteys = App.getYhteys();
+		PreparedStatement lauseke = yhteys.getStatement("SELECT asiakkaanId FROM tilaus WHERE tilausnumero = " + tilausnro + ";");
+		ResultSet rs = yhteys.hae(lauseke);
+		try {
+			while(rs.next()){
+				 id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Asiakas.haeAsiakkaanNimi(id);
+	}
+	
+	/*
+	 * Poistaa tilausnumeroa vastaavan tilauksen tietokannasta
+	 */
+	public static void poistaTilaus(int tilausnro){
+		Yhteys yhteys = App.getYhteys();
+		PreparedStatement lauseke = yhteys.getStatement("DELETE FROM tilaus WHERE tilausnumero = " + tilausnro + ";");
+		yhteys.tallenna(lauseke);
 	}
 }

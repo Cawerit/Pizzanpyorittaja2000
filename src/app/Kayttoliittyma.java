@@ -155,7 +155,7 @@ public class Kayttoliittyma {
 	private void tilausCtrl(){
 		while(true){
 			sano("", "");
-			int osio = kysyInt("\t\t", "1: Lue kaikki tilaukset", "2: Luo uusi tilaus", "4: Palaa takaisin");
+			int osio = kysyInt("\t\t", "1: Lue kaikki tilaukset", "2: Luo uusi tilaus", "3: Poista tilaus",  "4: Palaa takaisin");
 			
 			switch(osio){
 			
@@ -181,6 +181,10 @@ public class Kayttoliittyma {
 					//Poistetaan olio, jotta voidaan luoda uusia tilauksia
 					uusi = null;
 					System.out.println("\t\tTilaus tallennettu");
+					break;
+				case 3:
+					int tilausnumero = kysyInt("Anna poistettavan tilauksen tilausnumero");
+					Tilaus.poistaTilaus(tilausnumero);
 					break;
 				case 4:
 					return;

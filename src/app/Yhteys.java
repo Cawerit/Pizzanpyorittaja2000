@@ -38,7 +38,12 @@ public class Yhteys {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Suorittaa PreparedStatementin mukaisen päivitysoperaation
+	 * @param statement PreparedStatement-objekti, joka suoritetaan
+	 * @return 1 jos päivitys onnistuu, muuten 0
+	 */
 	public int tallenna(PreparedStatement statement){
 		try{
 			return statement.executeUpdate();
@@ -48,6 +53,11 @@ public class Yhteys {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param sql
+	 * @return
+	 */
 	public PreparedStatement getStatement(String sql){
 		try{
 			return this.yhteys.prepareStatement(sql);

@@ -95,6 +95,10 @@ public class RaakaAine implements Kantaolio{
 			}
 	}
 	
+	/**
+	 * Hakee kaikki raaka-aineet tietokannasta
+	 * @return raaka-aineiden listaesitys
+	 */
 	public static ArrayList<RaakaAine> haeKaikki(){
 		Yhteys y = App.getYhteys();
 		return Kantaolio.mapData(
@@ -103,8 +107,9 @@ public class RaakaAine implements Kantaolio{
 				RaakaAine.class);
 	}
 
-	/*
+	/**
 	 * V‰hent‰‰ raaka-aineen varastosaldoa yhdell‰.
+	 * @param raakaAine raaka-aine jonka saldoa v‰hennet‰‰n
 	 */
 	public static void vahennaSaldoa(String raakaAine){
 		Yhteys yhteys = App.getYhteys();
@@ -113,8 +118,10 @@ public class RaakaAine implements Kantaolio{
 		yhteys.tallenna(lauseke);
 	}
 	
-	/*
-	 * Hakee hinnan tietokannasta raaka-aineen nimen perusteella.
+	/**
+	 * Hakee raaka-aineen hinnan tietokannasta nimen perusteella.
+	 * @param nimi raaka-aineen nimi
+	 * @return raaka aineen hinta
 	 */
 	public static double haeHinta(String nimi){
 		Yhteys yhteys = App.getYhteys();

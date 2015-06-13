@@ -133,9 +133,10 @@ public class Tilaus implements Kantaolio{
 				Tilaus.class);
 	}
 	
-	/*
+	/**
 	 * Tallentaa tilaus-annos parin tilausKoostuu-tauluun.
 	 * Annokset tulee olla tallennettuna annos-tauluun ennen kuin ne voi tallentaa tilausKoostuu-tauluun.
+	 * @param annokset tallennettavat annokset
 	 */
 	private void tallennaAnnokset(ArrayList<String> annokset){
 		Yhteys yhteys = App.getYhteys();
@@ -155,8 +156,10 @@ public class Tilaus implements Kantaolio{
 		}
 	}
 
-	/*
+	/**
 	 * Laskee tilaukseen kuuluvien annosten hinnan.
+	 * @param tilausnumero tilauksen tilausnumero 
+	 * @return tilauksen hinta
 	 */
 	public static double haeHinta(int tilausnumero){
 		ArrayList<String> annokset = haeAnnokset(tilausnumero);
@@ -167,8 +170,10 @@ public class Tilaus implements Kantaolio{
 		return hinta;
 	}
 	
-	/*
-	 * Hakee tilaukseen kuuluvat annokset tietokannasta.
+	/**
+	 * Hakee tilaukseen kuuluvat annokset tietokannasta. 
+	 * @param tilausnumero tilauksen tilausnumero
+	 * @return annosten listaesitys
 	 */
 	public static ArrayList<String> haeAnnokset(int tilausnumero){
 		Yhteys yhteys = App.getYhteys();
@@ -183,8 +188,9 @@ public class Tilaus implements Kantaolio{
 		return annokset;
 	}
 	
-	/*
+	/**
 	 * Hakee viimeisen tilausnumeron tilaus-taulusta, jotta saadaan oikea tilausnumero tilausKoostuu-tauluun.
+	 * @return tilaus-taulun suurin tilausnumero
 	 */
 	public static int haeViimeisinTilausnumero(){
 		Yhteys yhteys = App.getYhteys();
@@ -198,8 +204,10 @@ public class Tilaus implements Kantaolio{
 		return 0;
 	}
 	
-	/*
-	 * Hakee tilausta koskevan asiakkaan nimen
+	/**
+	 * Hakee tilausta koskevan asiakkaan nimen.
+	 * @param tilausnro tilauksen tilausnumero
+	 * @return asiakkaan nimi
 	 */
 	public static String haeAsiakkaanNimi(int tilausnro){
 		int id = 0;
@@ -217,8 +225,9 @@ public class Tilaus implements Kantaolio{
 		return Asiakas.haeAsiakkaanNimi(id);
 	}
 	
-	/*
+	/**
 	 * Poistaa tilausnumeroa vastaavan tilauksen tietokannasta
+	 * @param tilausnro tilauksen tilausnumero
 	 */
 	public static void poistaTilaus(int tilausnro){
 		Yhteys yhteys = App.getYhteys();

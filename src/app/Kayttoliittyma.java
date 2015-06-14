@@ -50,10 +50,10 @@ public class Kayttoliittyma {
 		}	
 	}
 
-	/**
-	 * Toiminnot asiakkaidenhallintaan
-	 */
-	private void asiakasCtrl(){
+			/**
+			 * Toiminnot asiakkaidenhallintaan
+			 */
+			private void asiakasCtrl(){
 		while(true){
 			sano("", "");
 			int osio = kysyInt("\t\t", "1: Lue kaikki asiakkaat", "2: Lis‰‰ uusi asiakas", "4: Palaa takaisin");

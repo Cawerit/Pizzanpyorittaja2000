@@ -6,8 +6,14 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 public class RaakaAine implements Kantaolio{
-	
+	/**
+	 * Taulu josta RaakaAine-objekteihin haetaan data
+	 */
 	public static final String TAULU = "raaka_aine";
+	/**
+	 * Tallennusoperaatioihin käytettävien PreparedStatement-objektien luontiin käytettävä
+	 * sql String
+	 */
 	public static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(nimi, hinta, varastosaldo) VALUES (? , ? , ?)";
 

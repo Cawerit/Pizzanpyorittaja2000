@@ -13,8 +13,6 @@ public class Annos implements Kantaolio{
 	
 	public static final String TAULU = "annos";
 	
-	private static final String UPDATE_SQL =
-			"UPDATE " + TAULU + " SET valmistuskustannukset= ? WHERE nimi = ?";
 	private static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(nimi, valmistuskustannukset) VALUES (? , ?)";
 	private static final PreparedStatement NIMELLA_HAKU_STATEMENT =
@@ -91,19 +89,10 @@ public class Annos implements Kantaolio{
 	@Override
 	public boolean pushData(Yhteys yhteys){
 		PreparedStatement lauseke;
-    	ArrayList<Annos> lista = haeKaikki();
 		try{
 			lauseke = yhteys.getStatement(INSERT_SQL);
 			lauseke.setString(1, this.nimi);
 			lauseke.setDouble(2, this.valmistuskustannukset);
-			//Jos annos löytyy tietokannasta, tehdään päivitysoperaatio :
-			for(Annos annos : lista){
-				if(this.equals(annos)){
-					lauseke = yhteys.getStatement(UPDATE_SQL);
-					lauseke.setDouble(1, this.valmistuskustannukset);
-					lauseke.setString(2, this.nimi);
-				}
-			}
 			return yhteys.tallenna(lauseke) > 0;
 			} catch (SQLException e){
 				System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());

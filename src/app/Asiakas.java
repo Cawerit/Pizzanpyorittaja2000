@@ -7,17 +7,28 @@ import java.util.ArrayList;
 
 public class Asiakas implements Kantaolio {
 	
+	/**
+	 * Kannan taulu josta asiakkaita voi hakea
+	 */
 	public static final String TAULU = "asiakas";
-	
+	/**
+	 * Tallennusoperaatioihin käytettävä PreparedStatement
+	 */
 	private static final PreparedStatement INSERT_STATEMENT =
 			App.getYhteys().getStatement("INSERT INTO " + TAULU + "(nimi, osoite) VALUES (? , ?)");
-	
+	/**
+	 * Kaikkien asiakkaiden hakemiseen käytettävä PreparedStatement
+	 */
 	private static final PreparedStatement HAE_KAIKKI_STATEMENT = 
 			App.getYhteys().getStatement("SELECT * FROM " + TAULU);
-	
+	/**
+	 * Tietyn nimisten asiakkaiden hakemiseen käytettävä PreparedStatement
+	 */
 	private static final PreparedStatement HAE_NIMELLA_STATEMENT =
 			App.getYhteys().getStatement("SELECT * FROM " + TAULU + " WHERE nimi=?");
-	
+	/**
+	 * Tietyn asiakkaan hakemiseen käytettävä PreparedStatement
+	 */
 	private static final PreparedStatement HAE_IDLLA_STATEMENT =
 			App.getYhteys().getStatement("SELECT * FROM " + TAULU + " WHERE id=?");
 		
@@ -101,7 +112,11 @@ public class Asiakas implements Kantaolio {
 				y.hae(HAE_KAIKKI_STATEMENT),
 				Asiakas.class);
 	}
-	
+	/**
+	 * Hakee asiakastaulusta kaikki asiakkaat joilla on annettu nimi
+	 * @param nimi Asiakkaalle annettu nimi
+	 * @return Lista osumista muodostetuista Asiakas-objekteista
+	 */
 	public static ArrayList<Asiakas> haeNimella(String nimi){
 		Yhteys y = App.getYhteys();
 		try{
@@ -110,6 +125,11 @@ public class Asiakas implements Kantaolio {
 		} catch(SQLException e){ e.printStackTrace(); }
 		return Kantaolio.mapData(y.hae(HAE_NIMELLA_STATEMENT), Asiakas.class);
 	}
+	/**
+	 * Hakee taulusta asiakkaan jolla on annettu id
+	 * @param id Asiakkaan id
+	 * @return Osumasta muodostettu Asiakas-objekti tai null, jos osumia ei löytynyt
+	 */
 	public static Asiakas haeIdlla(int id){
 		Yhteys y = App.getYhteys();
 		try{

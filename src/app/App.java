@@ -2,7 +2,7 @@ package app;
 
 public class App {
 	
-	public static final Yhteys yhteys = new Yhteys();
+	private static Yhteys yhteys = new Yhteys();
 	
 	/**
 	 * Palauttaa tietokantayhteyden mahdollistaen tietokantaoperaatiot

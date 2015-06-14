@@ -8,7 +8,6 @@ public class Kayttoliittyma {
 
 	private Yhteys yhteys = App.getYhteys();
 	private Scanner sc;
-	public static String HAE_KAIKKI = "SELECT * FROM ?";
 	
 	public Kayttoliittyma(){
 		sc = new Scanner( System.in );
@@ -224,7 +223,7 @@ public class Kayttoliittyma {
 							valittuAsiakas,
 							annokset
 							);
-					uusi.pushData(App.getYhteys());
+					uusi.pushData(yhteys);
 					sano("\tTilaus " + uusi.toString() + " tallennettu.");
 					
 					break;

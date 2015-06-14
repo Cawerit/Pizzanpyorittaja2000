@@ -24,18 +24,16 @@ public class Tilaus implements Kantaolio{
 	private static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(kuljettajanNimi, asiakkaanId, tilausnumero) VALUES (?, ?, ?)";
 	
-	private static final String HAE_ANNOKSET_SQL =
-			"SELECT * FROM " + Annos.TAULU + " WHERE nimi IN "
-			+"(SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = ? )";
-	
 	private static final PreparedStatement HAE_ANNOKSET_STATEMENT =
-			App.getYhteys().getStatement("SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = ?");
+			App.getYhteys().getStatement("SELECT * FROM " + Annos.TAULU + " WHERE nimi IN "
+			+"(SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = ? )");
 	
 	
 	public Tilaus(String kuljettajanNimi, Asiakas asiakas, ArrayList<Annos> annokset){
 		setKuljettajanNimi(kuljettajanNimi);
 		setAsiakas(asiakas);
-		setAnnokset(annokset);
+		if(annokset == null) setAnnokset();
+		else setAnnokset(annokset);
 		setHinta();
 	}
 	
@@ -79,29 +77,26 @@ public class Tilaus implements Kantaolio{
 	
 	/**
 	 * Asettaa tälle tilaukselle kuuluvat annokset
-	 * 
-	 * @param annokset Lista Tilaus-objektille kuuluvista annoksista.
-	 * 					Jos null, tieto haetaan palvelimelta.			   
+	 * @param annokset Lista Tilaus-objektille kuuluvista annoksista		   
 	 */
 	public void setAnnokset(ArrayList<Annos> annokset) {
-		Yhteys y = App.getYhteys();
-		PreparedStatement statement;
-		if(annokset == null){			
-			//Haetaan ensin kaikki olemassaolevat annokset,
-			//näitä tarvitaan oli annokset null tai ei
-			statement = y.getStatement(HAE_ANNOKSET_SQL);
-			try{
-				statement.setInt(1, tilausnumero);
-			} catch(SQLException virhe){ virhe.printStackTrace(); }
-			
-			this.annokset = Kantaolio.mapData(y.hae(statement), Annos.class);
-			
-		} else {
-			this.annokset = annokset;
-		}
+		this.annokset = annokset;
 		//Lasketaan myös hinta tuotteelle tämän kautta, koska hinta on riippuvainen annoksista
 		this.setHinta();		
-	}	
+	}
+	/**
+	 * Hakee tälle tilaukselle kuuluvat annokset tilausKoostuu-taulusta ja asettaa tuloksena
+	 * saadut annokset tämän objektin annoksiksi
+	 * @param annokset Lista Tilaus-objektille kuuluvista annoksista		   
+	 */
+	public void setAnnokset(){
+		try{
+			HAE_ANNOKSET_STATEMENT.clearParameters();
+			HAE_ANNOKSET_STATEMENT.setInt(1, tilausnumero);
+		} catch(SQLException virhe){ virhe.printStackTrace(); }
+		setAnnokset(Kantaolio.mapData(App.getYhteys().hae(HAE_ANNOKSET_STATEMENT), Annos.class));
+	}
+	
 	
 	@Override
 	public boolean equals(Object o){
@@ -122,7 +117,7 @@ public class Tilaus implements Kantaolio{
 			setHinta( resource.getDouble("hinta") );
 			setTilausnumero( resource.getInt("tilausnumero") );
 			setAsiakas( Asiakas.haeIdlla(resource.getInt("asiakkaanId")) );
-			haeAnnokset();
+			setAnnokset();
 			return true;
 		} catch( SQLException e ){
 			System.out.println("Virhe asiakkaan päivittämisesä \n"+ e.toString());
@@ -182,27 +177,7 @@ public class Tilaus implements Kantaolio{
 				y.hae(
 				y.getStatement("SELECT * FROM " + TAULU)),
 				Tilaus.class);
-	}
-	
-	/**
-	 * Hakee tilaukseen kuuluvat annokset tietokannasta. 
-	 * @param tilausnumero tilauksen tilausnumero
-	 * @return annosten listaesitys
-	 */
-	private void haeAnnokset(){
-		Yhteys yhteys = App.getYhteys();
-		ArrayList<Annos> annokset = new ArrayList<>();
-		try {
-			HAE_ANNOKSET_STATEMENT.clearParameters();
-			HAE_ANNOKSET_STATEMENT.setInt(1, tilausnumero);
-			ResultSet rs = yhteys.hae(HAE_ANNOKSET_STATEMENT);
-			while (rs.next()) annokset.add(Annos.haeNimella(rs.getString(0)));
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		setAnnokset(annokset);
-	}
-	
+	}	
 	/**
 	 * Hakee tilausta koskevan asiakkaan nimen
 	 * @return asiakkaan nimi

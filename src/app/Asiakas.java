@@ -8,10 +8,18 @@ import java.util.ArrayList;
 public class Asiakas implements Kantaolio {
 	
 	public static final String TAULU = "asiakas";
-	public static final String UPDATE_SQL =
-			"UPDATE " + TAULU + " SET nimi = ? , osoite = ? WHERE id = ?";
-	public static final String INSERT_SQL =
-			"INSERT INTO " + TAULU + "(nimi, osoite) VALUES (? , ?)";
+	
+	private static final PreparedStatement INSERT_STATEMENT =
+			App.getYhteys().getStatement("INSERT INTO " + TAULU + "(nimi, osoite) VALUES (? , ?)");
+	
+	private static final PreparedStatement HAE_KAIKKI_STATEMENT = 
+			App.getYhteys().getStatement("SELECT * FROM " + TAULU);
+	
+	private static final PreparedStatement HAE_NIMELLA_STATEMENT =
+			App.getYhteys().getStatement("SELECT * FROM " + TAULU + " WHERE nimi=?");
+	
+	private static final PreparedStatement HAE_IDLLA_STATEMENT =
+			App.getYhteys().getStatement("SELECT * FROM " + TAULU + " WHERE id=?");
 		
 	private int id;
 	private String nimi;
@@ -72,17 +80,10 @@ public class Asiakas implements Kantaolio {
 	@Override
 	public boolean pushData(Yhteys yhteys){
 		PreparedStatement lauseke;
-		int id = getId();
 		try{
-			if(id == 0){//Jos id == 0, kyseessä on uusi asiakas
-				lauseke = yhteys.getStatement(INSERT_SQL);
-			} else {
-				lauseke = yhteys.getStatement(UPDATE_SQL);
-				lauseke.setInt(3, id);
-			}
+			lauseke = INSERT_STATEMENT;
 			lauseke.setString(1, this.nimi);
 			lauseke.setString(2, this.osoite);
-			
 			return yhteys.tallenna(lauseke) > 0;
 		} catch (SQLException e){
 			System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());
@@ -97,43 +98,26 @@ public class Asiakas implements Kantaolio {
 	public static ArrayList<Asiakas> haeKaikki(){
 		Yhteys y = App.getYhteys();
 		return Kantaolio.mapData(
-				y.hae(
-				y.getStatement("SELECT * FROM " + TAULU)),
+				y.hae(HAE_KAIKKI_STATEMENT),
 				Asiakas.class);
 	}
 	
-	/**
-	 * Hakee asiakkaan id:tä vastaavan nimen tietokannasta.
-	 * 
-	 * @param id Asiakkaan Id
-	 * @return Asiakkaan nimi
-	 */
-	public static String haeAsiakkaanNimi(int id){
-		Yhteys yhteys = App.getYhteys();
-		ResultSet rs = yhteys.hae(yhteys.getStatement("SELECT nimi FROM asiakas WHERE id= " + id + ";"));
-		try {
-			while (rs.next()) return rs.getString(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "Asiakkaan nimeä ei löytynyt.";
+	public static ArrayList<Asiakas> haeNimella(String nimi){
+		Yhteys y = App.getYhteys();
+		try{
+			HAE_NIMELLA_STATEMENT.clearParameters();
+			HAE_NIMELLA_STATEMENT.setString(1, nimi);
+		} catch(SQLException e){ e.printStackTrace(); }
+		return Kantaolio.mapData(y.hae(HAE_NIMELLA_STATEMENT), Asiakas.class);
 	}
-	
-	/**
-	 * Hakee asiakkaan nimeä vastaavan id:n tietokannasta.
-	 * 
-	 * @param nimi Asiakkaan nimi
-	 * @return Asiakkaan id
-	 */
-	public static int haeAsiakkaanId(String nimi){
-		Yhteys yhteys = App.getYhteys();
-		ResultSet rs = yhteys.hae(yhteys.getStatement("SELECT id FROM asiakas WHERE nimi= '" + nimi + "';"));
-		try {
-			while(rs.next()) return rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
+	public static Asiakas haeIdlla(int id){
+		Yhteys y = App.getYhteys();
+		try{
+			HAE_IDLLA_STATEMENT.clearParameters();
+			HAE_IDLLA_STATEMENT.setInt(1, id);
+		} catch(SQLException e){ e.printStackTrace(); }
+		ArrayList<Asiakas> osumat =  Kantaolio.mapData(y.hae(HAE_IDLLA_STATEMENT), Asiakas.class);
+		return osumat.size() >= 1 ? osumat.get(0) : null;
 	}
 }
 

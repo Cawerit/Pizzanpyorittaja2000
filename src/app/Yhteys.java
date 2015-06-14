@@ -34,33 +34,50 @@ public class Yhteys {
 		try{
 			return statement.executeQuery();
 		} catch(SQLException e){
-			System.out.println("Virhe suoritettaessa hakua palvelimelle. \n" + e.toString());
+			System.out.println("Virhe suoritettaessa hakua kantaan. \n" + e.toString());
 			return null;
 		}
 	}
-
 	/**
-	 * Suorittaa PreparedStatementin mukaisen p‰ivitysoperaation
-	 * @param statement PreparedStatement-objekti, joka suoritetaan
-	 * @return 1 jos p‰ivitys onnistuu, muuten 0
+	 * Suorittaa annetun PreparedStatement-objektin executeUpdate-metodin
+	 * @param statement PreparedStatement-objekti
+	 * @return Niiden tietueiden m‰‰r‰ joihin operaatio vaikutti
 	 */
 	public int tallenna(PreparedStatement statement){
 		try{
 			return statement.executeUpdate();
 		} catch(SQLException e){
-			System.out.println("Virhe suoritettaessa hakua palvelimelle. \n" + e.toString());
+			System.out.println("Virhe suoritettaessa muokkausta kantaan. \n" + e.toString());
 			return 0;
 		}
 	}
-	
 	/**
-	 * 
-	 * @param sql
-	 * @return
+	 * Muodostaa PreparedStatement-objektin annetulla lausekkeella
+	 * T‰t‰ objektia voi myˆhemmin k‰ytt‰‰ haku- ja tallennusoperaatioissa
+	 * @param sql Lauseke, joka annetaan PreparedStatementin parametriksi
+	 * @return Muodostettu PreparedStatement
 	 */
 	public PreparedStatement getStatement(String sql){
 		try{
 			return this.yhteys.prepareStatement(sql);
+		}catch (SQLException e){
+			System.out.println("Virhe muodostaessa lauseketta.\n" + e.toString());
+			return null;
+		}
+	}
+	/**
+	 * Muodostaa PreparedStatement-objektin annetulla lausekkeella
+	 * T‰t‰ objektia voi myˆhemmin k‰ytt‰‰ haku- ja tallennusoperaatioissa
+	 * Antamalla Statement-Interfacen vakion parametrina voi esimerkiksi m‰‰ritt‰‰
+	 * ett‰ kannassa autogeneroidut arvot s‰ilytet‰‰n PreparedStatement-objektissa
+	 * 
+	 * @param sql Lauseke, joka annetaan PreparedStatementin parametriksi
+	 * @param option Joku Statement-Interfacen staattisista vakioista
+	 * @return Muodostettu PreparedStatement
+	 */
+	public PreparedStatement getStatement(String sql, int option){
+		try{
+			return this.yhteys.prepareStatement(sql, option);
 		}catch (SQLException e){
 			System.out.println("Virhe muodostaessa lauseketta.\n" + e.toString());
 			return null;

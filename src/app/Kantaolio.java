@@ -44,8 +44,7 @@ public interface Kantaolio {
 	boolean pullData(ResultSet resource);
 	
 	/**
-	 * Päivittää getTunniste()-metodin perusteella löydettävän tietokannan tietueen vastaamaan
-	 * tätä Kantaoliota.
+	 * Tallentaa Kantaolion palvelimelle uutena tietueena.
 	 * 
 	 * @param yhteys Yhteys-objekti, jolla Kantaolio saa yhteyden tauluun.
 	 * @return true, mikäli päivitys onnistui, false jos päivitysyritys aiheutti virheen. 

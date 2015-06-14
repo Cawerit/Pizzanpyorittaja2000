@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class RaakaAine implements Kantaolio{
 	
 	public static final String TAULU = "raaka_aine";
-	public static final String UPDATE_SQL =
-			"UPDATE " + TAULU + " SET hinta = ? , varastosaldo = ? WHERE nimi = ?";
 	public static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(nimi, hinta, varastosaldo) VALUES (? , ? , ?)";
 
@@ -18,7 +16,6 @@ public class RaakaAine implements Kantaolio{
 	private int varastosaldo;
 	
 	public RaakaAine(){
-		
 	}
 	
 	public RaakaAine(String nimi, double hinta, int varastosaldo){
@@ -73,26 +70,16 @@ public class RaakaAine implements Kantaolio{
 	@Override
 	public boolean pushData(Yhteys yhteys){
 		PreparedStatement lauseke;
-    	ArrayList<RaakaAine> lista = haeKaikki();
 		try{
 			lauseke = yhteys.getStatement(INSERT_SQL);
 			lauseke.setString(1, this.nimi);
 			lauseke.setDouble(2, this.hinta);
 			lauseke.setInt(3, this.varastosaldo);
-			//Jos raaka-aine löytyy tietokannasta, tehdään päivitysoperaatio :
-			for(RaakaAine aine : lista){
-				if(this.nimi.equals(aine.getNimi())){
-					lauseke = yhteys.getStatement(UPDATE_SQL);
-					lauseke.setDouble(1, this.hinta);
-					lauseke.setInt(2, this.varastosaldo);
-					lauseke.setString(3, this.nimi);
-				}
-			}
 			return yhteys.tallenna(lauseke) > 0;
-			} catch (SQLException e){
-				System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());
-				return false;
-			}
+		} catch (SQLException e){
+			System.out.println("Virhe tallenteen päivittämisessä. \n"+e.toString());
+			return false;
+		}
 	}
 	
 	/**
@@ -106,16 +93,19 @@ public class RaakaAine implements Kantaolio{
 				y.getStatement("SELECT * FROM " + TAULU)),
 				RaakaAine.class);
 	}
-
 	/**
 	 * Vähentää raaka-aineen varastosaldoa yhdellä.
 	 * @param raakaAine raaka-aine jonka saldoa vähennetään
 	 */
-	public static void vahennaSaldoa(String raakaAine){
+	public boolean vahennaSaldoa(String raakaAine){
 		Yhteys yhteys = App.getYhteys();
-		PreparedStatement lauseke = yhteys.getStatement("UPDATE raaka_aine SET varastosaldo = varastosaldo -1 WHERE nimi = "
-														+ "'" + raakaAine + "';");
-		yhteys.tallenna(lauseke);
+		PreparedStatement lauseke = yhteys.getStatement("UPDATE "+TAULU+" SET varastosaldo = varastosaldo -1 WHERE nimi = ?");
+		try{
+			lauseke.setString(1, this.nimi);
+		} catch(SQLException virhe){
+			virhe.printStackTrace();
+		}
+		return yhteys.tallenna(lauseke) > 0;
 	}
 	
 	/**

@@ -168,35 +168,67 @@ public class Kayttoliittyma {
 	 * Toiminnot tilausten hallintaan
 	 */
 	private void tilausCtrl(){
+		
+		tilaus_ctrl_loop:
 		while(true){
 			sano("", "");
 			int osio = kysyInt("\t\t", "1: Lue kaikki tilaukset", "2: Luo uusi tilaus", "3: Poista tilaus",  "4: Palaa takaisin");
 			
 			switch(osio){
-			
 				case 1:
 					sano(Tilaus.haeKaikki().toArray());
 					break;
 				case 2: 
-					Tilaus uusi = new Tilaus();
-					uusi.setAsiakkaanId(Asiakas.haeAsiakkaanId(kysyStr("\t\t", "Anna Asiakkaan nimi")));
-					uusi.setKuljettajanNimi(kysyStr("\t\t", "Anna kuljettajan nimi"));
-					Boolean jatketaanko = true;
-					ArrayList<String> annokset = new ArrayList<String>();
-					while(jatketaanko){
-						String annos = kysyStr("\t\t", "Lisää annos tai tallenna tilaus painamalla 4");
-						if(!annos.equals("4")){
-							annokset.add(annos);
+					
+					ArrayList<Asiakas> haetutAsiakkaat = Asiakas.haeNimella(kysyStr("\t\t", "Anna Asiakkaan nimi"));
+					Asiakas valittuAsiakas;
+					
+					switch(haetutAsiakkaat.size()){
+						case 0:
+							//Jos nimi ei tuottanut tuloksia, ilmoitetaan asiasta ja palataan valikkoon
+							sano("\t", "Nimellä ei löytynyt yhtään asiakasta");
+							continue tilaus_ctrl_loop;
+							
+						case 1://Jee, vain yksi nimi
+							valittuAsiakas = haetutAsiakkaat.get(0);
+							break;
+						
+						default://Muutoin on liikaa vaihtoehtoja
+							sano("\t", "Nimellä löytyi useita asiakkaita:");
+							for(int i=0, n=haetutAsiakkaat.size(); i<n; i++){
+								sano("\t" + i + ": " + haetutAsiakkaat.get(i).toString());
+							}
+							int index = kysyInt("\t", "Valitse yksi listalta");
+							valittuAsiakas = haetutAsiakkaat.get(index);							
+							break;
+					}
+					
+					ArrayList<Annos> annokset = new ArrayList<Annos>();
+					while(true){
+						String seuraavaksi = kysyStr("\t\t", "Lisää annos tai tallenna tilaus painamalla 4");
+						if(!seuraavaksi.equals("4")){
+							Annos haettu = Annos.haeNimella(seuraavaksi);
+							if(haettu == null){
+								sano("\t", "Annosta ei löydetty annetulla nimellä! Yritä uudelleen.");
+								continue;
+							} else{
+								annokset.add(haettu);
+							}
 						} else {
-							jatketaanko = false;
+							break;
 						}
 					}
-					uusi.pushData(yhteys);
-					uusi.setAnnokset(annokset);
-					//Poistetaan olio, jotta voidaan luoda uusia tilauksia
-					uusi = null;
-					System.out.println("\t\tTilaus tallennettu");
+					//Luodaan ja tallennetaan tilaus
+					Tilaus uusi = new Tilaus(
+							kysyStr("\t\t", "Kuka kuljettaa tilauksen?"),
+							valittuAsiakas,
+							annokset
+							);
+					uusi.pushData(App.getYhteys());
+					sano("\tTilaus " + uusi.toString() + " tallennettu.");
+					
 					break;
+					
 				case 3:
 					int tilausnumero = kysyInt("Anna poistettavan tilauksen tilausnumero");
 					Tilaus.poistaTilaus(tilausnumero);

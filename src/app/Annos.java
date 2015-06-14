@@ -12,10 +12,13 @@ public class Annos implements Kantaolio{
 	private ArrayList<String> raakaAineet;
 	
 	public static final String TAULU = "annos";
-	public static final String UPDATE_SQL =
+	
+	private static final String UPDATE_SQL =
 			"UPDATE " + TAULU + " SET valmistuskustannukset= ? WHERE nimi = ?";
-	public static final String INSERT_SQL =
+	private static final String INSERT_SQL =
 			"INSERT INTO " + TAULU + "(nimi, valmistuskustannukset) VALUES (? , ?)";
+	private static final PreparedStatement NIMELLA_HAKU_STATEMENT =
+			 App.getYhteys().getStatement("SELECT * FROM " + TAULU + " WHERE nimi=?");
 
 	public Annos(String nimi, double valmistuskustannukset, ArrayList<String> raakaAineet){
 		setNimi(nimi);
@@ -175,6 +178,13 @@ public class Annos implements Kantaolio{
 			e.printStackTrace();
 		}
 		return 0.0;
+	}
+	public static Annos haeNimella(String nimi){
+		Yhteys y = App.getYhteys();
+		try{ NIMELLA_HAKU_STATEMENT.setString(1, nimi);}
+		catch(SQLException e){ e.printStackTrace(); }
+		ArrayList<Annos> tulos = Kantaolio.mapData(y.hae(NIMELLA_HAKU_STATEMENT), Annos.class);
+		return tulos.size() >= 1 ? tulos.get(0) : null;
 	}
 	
 	/**

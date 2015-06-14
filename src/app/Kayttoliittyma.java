@@ -15,6 +15,9 @@ public class Kayttoliittyma {
 		sano("Tervetuloa ohjelmaan Pizzanpyörittäjä 2000");	
 	}
 	
+	/**
+	 * Ohjelman aloitusvalikko
+	 */
 	public void suorita(){
 		while(true){		
 			sano("", "", "Valitse vaihtoehto kirjoittamalla numero ja painamalla enter:");
@@ -46,7 +49,10 @@ public class Kayttoliittyma {
 			}
 		}	
 	}
-	
+
+	/**
+	 * Toiminnot asiakkaidenhallintaan
+	 */
 	private void asiakasCtrl(){
 		while(true){
 			sano("", "");
@@ -78,6 +84,9 @@ public class Kayttoliittyma {
 		}
 	}
 	
+	/**
+	 * Toiminnot varastonhallintaan
+	 */
 	private void varastoCtrl(){
 		while(true){
 			sano("", "");
@@ -110,6 +119,9 @@ public class Kayttoliittyma {
 		}
 	}
 	
+	/**
+	 * Toiminnot ruokalistan hallintaan
+	 */
 	private void menuCtrl(){
 		while(true){
 			sano("", "");
@@ -152,6 +164,9 @@ public class Kayttoliittyma {
 		}
 	}
 	
+	/**
+	 * Toiminnot tilausten hallintaan
+	 */
 	private void tilausCtrl(){
 		
 		tilaus_ctrl_loop:
@@ -230,11 +245,11 @@ public class Kayttoliittyma {
 		}
 	}
 	
-    /*
-     * 	Tulostaa näytölle annetut lauseet
-     * 
-     * 	Ensimmäinen parametri kirjoitetaan jokaisen rivin alkuun, loput omina riveinään.
-     */
+	/**
+	 * Tulostaa näytölle annetut lauseet 
+	 * Ensimmäinen parametri kirjoitetaan jokaisen rivin alkuun, loput omina riveinään.
+	 * @param txt tulostettava teksti
+	 */
     private static void sano(String... txt){
     	if(txt.length == 1){
     		System.out.println(txt[0]);
@@ -250,12 +265,29 @@ public class Kayttoliittyma {
     	}
     }
     
+    /**
+     * Kysyy käyttäjältä numeroa
+     * @param txt kysymys
+     * @return vastaus
+     */
     private int kysyInt(String... txt){
     	return Integer.parseInt(kysyStr(txt));
     }
+    
+    /**
+     * Kysyy käyttäjältä desimaaliluvun
+     * @param txt kysymys
+     * @return vastaus
+     */
     private double kysyDouble(String... txt){
     	return Double.parseDouble(kysyStr(txt));
     }
+    
+    /**
+     * Kysyy käyttäjältä merkkijonon
+     * @param txt kysymys
+     * @return vastaus
+     */
     private String kysyStr(String... txt){
     	sano(txt);
     	return sc.nextLine();

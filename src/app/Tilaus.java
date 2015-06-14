@@ -28,6 +28,9 @@ public class Tilaus implements Kantaolio{
 			"SELECT * FROM " + Annos.TAULU + " WHERE nimi IN "
 			+"(SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = ? )";
 	
+	private static final PreparedStatement HAE_ANNOKSET_STATEMENT =
+			App.getYhteys().getStatement("SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = ?");
+	
 	
 	public Tilaus(String kuljettajanNimi, Asiakas asiakas, ArrayList<Annos> annokset){
 		setKuljettajanNimi(kuljettajanNimi);
@@ -119,6 +122,7 @@ public class Tilaus implements Kantaolio{
 			setHinta( resource.getDouble("hinta") );
 			setTilausnumero( resource.getInt("tilausnumero") );
 			setAsiakas( Asiakas.haeIdlla(resource.getInt("asiakkaanId")) );
+			haeAnnokset();
 			return true;
 		} catch( SQLException e ){
 			System.out.println("Virhe asiakkaan päivittämisesä \n"+ e.toString());
@@ -179,35 +183,37 @@ public class Tilaus implements Kantaolio{
 				y.getStatement("SELECT * FROM " + TAULU)),
 				Tilaus.class);
 	}
-
-	/**
-	 * Laskee tilaukseen kuuluvien annosten hinnan.
-	 */
-	private double haeHinta(){
-		double hinta = 0;
-		for(Annos a : this.annokset){
-			hinta += Annos.haeHinta(a.getNimi());
-		}
-		return hinta;
-	}
 	
 	/**
-	 * Hakee tilaukseen kuuluvat annokset tietokannasta.
+	 * Hakee tilaukseen kuuluvat annokset tietokannasta. 
+	 * @param tilausnumero tilauksen tilausnumero
+	 * @return annosten listaesitys
 	 */
-	public static ArrayList<String> haeAnnokset(int tilausnumero){
+	private void haeAnnokset(){
 		Yhteys yhteys = App.getYhteys();
-		PreparedStatement lauseke = yhteys.getStatement("SELECT annoksenNimi FROM tilausKoostuu WHERE tilausnumero = '" + tilausnumero + "';");
-		ResultSet rs = yhteys.hae(lauseke);
-		ArrayList<String> annokset = new ArrayList<String>();
+		ArrayList<Annos> annokset = new ArrayList<>();
 		try {
-			while (rs.next()) annokset.add(rs.getString(0));
+			HAE_ANNOKSET_STATEMENT.clearParameters();
+			HAE_ANNOKSET_STATEMENT.setInt(1, tilausnumero);
+			ResultSet rs = yhteys.hae(HAE_ANNOKSET_STATEMENT);
+			while (rs.next()) annokset.add(Annos.haeNimella(rs.getString(0)));
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return annokset;
+		setAnnokset(annokset);
 	}
-	/*
+	
+	/**
+	 * Hakee tilausta koskevan asiakkaan nimen
+	 * @return asiakkaan nimi
+	 */
+	public String haeAsiakkaanNimi(){
+		return getAsiakas().getNimi();
+	}
+	
+	/**
 	 * Poistaa tilausnumeroa vastaavan tilauksen tietokannasta
+	 * @param tilausnro tilauksen tilausnumero
 	 */
 	public static void poistaTilaus(int tilausnro){
 		Yhteys yhteys = App.getYhteys();

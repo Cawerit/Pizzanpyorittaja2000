@@ -111,6 +111,10 @@ public class Annos implements Kantaolio{
 			}
 	}
 	
+	/**
+	 * Hakee kaikki annokset tietokannasta
+	 * @return annosten listaesitys
+	 */
 	public static ArrayList<Annos> haeKaikki(){
 		Yhteys y = App.getYhteys();
 		return Kantaolio.mapData(
@@ -119,9 +123,10 @@ public class Annos implements Kantaolio{
 				Annos.class);
 	}
 	
-	/*
+	/**
 	 * Tallentaa annos-raaka-aine parin annosKoostuu-tauluun.
 	 * Raaka-aineet tulee olla tallennettuna raaka_aine-tauluun ennen kuin ne voi tallentaa AnnosKoostuu-tauluun.
+	 * @param raakaAineet tallennettavat raaka-aineet
 	 */
 	private void tallennaRaakaAineet(ArrayList<String> raakaAineet){
 		Yhteys yhteys = App.getYhteys();
@@ -136,8 +141,10 @@ public class Annos implements Kantaolio{
 		}
 	}
 	
-	/*
+	/**
 	 * Laskee annoksen valmistuskustannukset ja jokaisen siihen kuuluvan raaka-aineen hinnan yhteen.
+	 * @param annoksenNimi annoksen nimi
+	 * @return annoksen hinta
 	 */
 	public static double haeHinta(String annoksenNimi){
 		double hinta = haeValmistuskustannukset(annoksenNimi);
@@ -152,8 +159,10 @@ public class Annos implements Kantaolio{
 		return hinta;
 	}
 	
-	/*
+	/**
 	 * Hakee valmistuskustannukset tietokannasta annoksen nimen perusteella.
+	 * @param nimi annoksen nimi
+	 * @return annoksen valmistuskustannukset
 	 */
 	public static double haeValmistuskustannukset(String nimi){
 		Yhteys yhteys = App.getYhteys();
@@ -170,7 +179,6 @@ public class Annos implements Kantaolio{
 		}
 		return 0.0;
 	}
-	
 	public static Annos haeNimella(String nimi){
 		Yhteys y = App.getYhteys();
 		try{ NIMELLA_HAKU_STATEMENT.setString(1, nimi);}
@@ -179,8 +187,10 @@ public class Annos implements Kantaolio{
 		return tulos.size() >= 1 ? tulos.get(0) : null;
 	}
 	
-	/*
+	/**
 	 * Hakee annokseen kuuluvat raaka-aineet tietokannasta.
+	 * @param annoksenNimi annoksen nimi
+	 * @return raaka-aineiden ResultSet
 	 */
 	public static ResultSet haeRaakaAineet(String annoksenNimi){
 		Yhteys yhteys = App.getYhteys();
